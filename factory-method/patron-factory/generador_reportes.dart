@@ -1,30 +1,15 @@
 import 'documento.dart';
-import 'documento-texto.dart';
-import 'documento_json.dart';
-import 'documento_excel.dart';
 
-class GeneradorReportes {
-  void generarReporte(String formato, List<int> calificaciones) {
+abstract class GeneradorReportes {
+  // Este es el factory Method que debe ser implementado por las subclases
+  Documento crearDocumento();
+
+  void generarReporte(List<int> calificaciones) {
     if (calificaciones.isEmpty) {
       throw ArgumentError('El Reporte necesita una lista de calificaciones');
     }
 
-    // Este objeto conoce todas las implementaciones concretas
-    Documento documento;
-
-    switch (formato) {
-      case 'texto':
-        documento = DocumentoTexto();
-        break;
-      case 'json':
-        documento = DocumentoJson();
-        break;
-      case 'excel':
-        documento = DocumentoExcel();
-        break;
-      default:
-        throw ArgumentError('Formato invalido: $formato');
-    }
+    final documento = crearDocumento();
 
     print(documento.generar(calificaciones));
     print('Reporte generado correctamente');
